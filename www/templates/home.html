@@ -1,14 +1,14 @@
-<ion-view>
 
-    <ion-header-bar class="top">
-      <h1 class="title">Items</h1>
-      <button class="button button-icon ion-plus" ng-click="addItem()"></button>
-    </ion-header-bar>
+<ion-view view-title="Home">
+    <ion-nav-buttons side="right">
+      <button class="button button-icon ion-plus" ng-click="addItem()">
+      </button>
+    </ion-nav-buttons>
 
     <ion-content>
       <ion-list>
         <ion-item ng-repeat="item in items" ng-class="{purchased: item.status == 'purchased'}">
-          {{item.name}}
+          {{item.name}} 
           <ion-option-button class="button-royal" ng-click="purchaseItem(item)">
             <i class="icon ion-checkmark"></i>
           </ion-option-button>
