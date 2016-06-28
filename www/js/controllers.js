@@ -10,43 +10,88 @@ angular.module('starter.controllers', ['firebase', 'ngStorage'])
       StorageService.remove(thing);
     };
 
+
+
+
+
+
 })
 
-.controller('LoginSocialCtrl', function($scope, $rootScope) {
+.controller('LoginSocialCtrl', function($scope, $rootScope, Users) {
 
 
  
     console.log("Work started");
- 
-
-      // FirebaseUI config.
-      var uiConfig = {
-        'signInSuccessUrl': '#/app/main',
-        'signInOptions': [
-          firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-          firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-        ],
-        'callbacks': {
-          'signInSuccess': function(currentUser, credential, redirectUrl) {
-              console.log(credential);
-              $rootScope.user = currentUser;
-              $rootScope.accessToken = credential;
-            return true;
-          }
-        }
-      };
-
-      // Initialize the FirebaseUI Widget using Firebase.
       var app = firebase.initializeApp(config);
       var auth = app.auth();
-      var ui = new firebaseui.auth.AuthUI(auth);
-      // The start method will wait until the DOM is loaded.
-      ui.start('#firebaseui-auth-container', uiConfig);
+      $rootScope.users = Users;
+
+
+        auth.onAuthStateChanged(function(user) {
+        if (user) {
+          $rootScope.userId = user.uid;
+          $rootScope.user = user;
+          console.log("User signed in! ");
+          console.log(user);
+
+        } else {
+          console.log("User logged out");
+
+          // FirebaseUI config.
+          var uiConfig = {
+            'signInSuccessUrl': '#/app/main',
+            'signInOptions': [
+              firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+              firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+            ],
+            'callbacks': {
+              'signInSuccess': function(currentUser, credential, redirectUrl) {
+                  console.log("LOGGING IN");
+                  console.log(credential);
+                  console.log(currentUser);
+                  $rootScope.user = currentUser.displayName;
+                  $rootScope.userId = currentUser.uid;
+                  $rootScope.userEmail = currentUser.email;
+                  $rootScope.userPhoto = currentUser.photoURL;
+                  $rootScope.accessToken = credential;
+
+                  console.log("users " + $rootScope.users);
+
+                  function userExistsInUsers(user) {
+                    return user.userId === $rootScope.userId;
+                  };
+
+                  if (!$rootScope.users.find(userExistsInUsers) ) {
+                    $rootScope.users.$add({
+                      'user': $rootScope.user,
+                      'userId':$rootScope.userId,
+                      'userEmail':$rootScope.userEmail,
+                      'userPhoto':$rootScope.userPhoto
+                    });   
+                    console.log("New user added to the database!");                   
+                  } else {
+                    console.log("User is already in database");
+                  }
+         
+                return true;
+              }
+            }
+          };
+          var ui = new firebaseui.auth.AuthUI(auth);
+          // The start method will wait until the DOM is loaded.
+          ui.start('#firebaseui-auth-container', uiConfig);
+
+        }
+      });
+
+
+
+
     console.log("Work finished");
 
 
 })
-.controller('LoginUserCtrl', function($scope, $ionicModal) {
+.controller('LoginUserCtrl', function($scope, $rootScope, $ionicModal) {
 
   // Form data for the login modal
   $scope.loginData = {};
@@ -76,8 +121,8 @@ angular.module('starter.controllers', ['firebase', 'ngStorage'])
       .then(function(success) {
           console.log("Success!");
           console.log(success);
-          $scope.user = success.email;
-          console.log("username: " + $scope.user);
+          $rootScope.user = success.email;
+          console.log("username: " + $rootScope.user);
       })
       .catch(function(error) {
       // Handle Errors here.
@@ -96,12 +141,12 @@ angular.module('starter.controllers', ['firebase', 'ngStorage'])
   }; 
 
 })
-.controller('ListCtrl', function($scope, $ionicListDelegate, Items) {
-
+.controller('ListCtrl', function($scope, $rootScope, $ionicListDelegate, Items) {
+  console.log($rootScope.user);
   $scope.items = Items;
 
   $scope.addItem = function() {
-    if ($scope.user) {
+    if ($rootScope.user) {
       var name = prompt('What do you need to buy?');
     } else {
       console.log("You are not logged in!");
@@ -112,7 +157,7 @@ angular.module('starter.controllers', ['firebase', 'ngStorage'])
         'name': name
       });
     }
-  };
+  };  
 
   $scope.purchaseItem = function(item) {
     var itemRef = new Firebase('https://projekt1-eafbc.firebaseio.com/items/' + item.$id);
@@ -120,9 +165,13 @@ angular.module('starter.controllers', ['firebase', 'ngStorage'])
     $ionicListDelegate.closeOptionButtons();
   };
 })
-.controller('MainCtrl', function($scope, Matches) {
+.controller('MainCtrl', function($scope, $rootScope, Matches, Users) {
   $scope.matchesObj = Matches;
+  $rootScope.users = Users;
   console.log($scope.matchesObj)
+
+
+
 })
 .controller('BrowseCtrl', function($scope, $rootScope) {
     console.log("Browse page");
