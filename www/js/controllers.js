@@ -2,10 +2,47 @@
 angular.module('starter.controllers', ['firebase'])
 .controller('AppCtrl', function($scope, $ionicModal) {
 
+})
+
+.controller('LoginSocialCtrl', function($scope, $rootScope) {
+
+
+ 
+    console.log("Work started");
+ 
+
+      // FirebaseUI config.
+      var uiConfig = {
+        'signInSuccessUrl': '#/app/home',
+        'signInOptions': [
+          firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+          firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+        ],
+        'callbacks': {
+          'signInSuccess': function(currentUser, credential, redirectUrl) {
+              console.log(currentUser.displayName);
+              $rootScope.user = currentUser.displayName;
+            return true;
+          }
+        }
+      };
+
+      // Initialize the FirebaseUI Widget using Firebase.
+      var app = firebase.initializeApp(config);
+      var auth = app.auth();
+      var ui = new firebaseui.auth.AuthUI(auth);
+      // The start method will wait until the DOM is loaded.
+      ui.start('#firebaseui-auth-container', uiConfig);
+    console.log("Work finished");
+
+
+})
+.controller('LoginUserCtrl', function($scope, $ionicModal) {
+
   // Form data for the login modal
   $scope.loginData = {};
   // Create the login modal that we will use later
-  $ionicModal.fromTemplateUrl('templates/login.html', {
+  $ionicModal.fromTemplateUrl('templates/login_user.html', {
     scope: $scope
   }).then(function(modal) {
     $scope.modal = modal;
@@ -50,7 +87,6 @@ angular.module('starter.controllers', ['firebase'])
   }; 
 
 })
-
 .controller('ListCtrl', function($scope, $ionicListDelegate, Items) {
 
   $scope.items = Items;
@@ -75,8 +111,8 @@ angular.module('starter.controllers', ['firebase'])
     $ionicListDelegate.closeOptionButtons();
   };
 })
-.controller('BrowseCtrl', function($scope) {
+.controller('BrowseCtrl', function($scope, $rootScope) {
     console.log("Browse page");
-    console.log("USER: " + $scope.user);
+    console.log("USER: " + $rootScope.user);
 
 });

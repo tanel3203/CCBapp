@@ -10,7 +10,17 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
     	url: '/app',
     	abstract: true,
         templateUrl: 'templates/menu.html',
-        controller: 'AppCtrl'
+        controller: 'LoginUserCtrl'
+  })
+
+  .state('app.login_fb', {
+    url: '/login_fb',
+    views: {
+      'mainContent': {
+        templateUrl: 'templates/login_fb.html',
+        controller: 'LoginSocialCtrl'
+      }
+    }
   })
 
   .state('app.home', {
@@ -32,7 +42,8 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
       }
     }
   })
-    $urlRouterProvider.otherwise("/app/home");
+ 
+    $urlRouterProvider.otherwise("/app/login_fb");
 
 
   });
