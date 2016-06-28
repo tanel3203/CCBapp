@@ -1,5 +1,5 @@
 
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['firebase'])
 .controller('AppCtrl', function($scope, $ionicModal) {
 
   // Form data for the login modal
@@ -22,12 +22,32 @@ angular.module('starter.controllers', [])
   $scope.doLogin = function() {
     console.log('Doing login', $scope.loginData);
 
+
+
+    var username = $scope.loginData.username;
+    var password = $scope.loginData.password;
+    firebase.auth().signInWithEmailAndPassword(username, password)
+      .then(function(success) {
+          console.log("Success!");
+          console.log(success);
+          $scope.user = success.email;
+          console.log("username: " + $scope.user);
+      })
+      .catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message; 
+      console.log("ERROR code: " + errorCode);
+      console.log("ERROR msg: " + errorMessage);
+      // ...
+    });
+
     // Simulate a login delay. Remove this and replace with your login
     // code if using a login system
     // $timeout(function() {
     //   $scope.closeLogin();
     // }, 1000);
-  };
+  }; 
 
 })
 
@@ -36,7 +56,12 @@ angular.module('starter.controllers', [])
   $scope.items = Items;
 
   $scope.addItem = function() {
-    var name = prompt('What do you need to buy?');
+    if ($scope.user) {
+      var name = prompt('What do you need to buy?');
+    } else {
+      console.log("You are not logged in!");
+    }
+    
     if (name) {
       $scope.items.$add({
         'name': name
@@ -49,4 +74,9 @@ angular.module('starter.controllers', [])
     itemRef.child('status').set('purchased');
     $ionicListDelegate.closeOptionButtons();
   };
+})
+.controller('BrowseCtrl', function($scope) {
+    console.log("Browse page");
+    console.log("USER: " + $scope.user);
+
 });

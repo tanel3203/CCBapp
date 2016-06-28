@@ -27,7 +27,8 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
     url: '/browse',
     views: {
       'mainContent': {
-        templateUrl: 'templates/browse.html'
+        templateUrl: 'templates/browse.html',
+        controller: 'BrowseCtrl'
       }
     }
   })
