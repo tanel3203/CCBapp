@@ -1,6 +1,14 @@
 
-angular.module('starter.controllers', ['firebase'])
-.controller('AppCtrl', function($scope, $ionicModal) {
+angular.module('starter.controllers', ['firebase', 'ngStorage'])
+.controller('AppCtrl', function($scope, StorageService, $localStorage, $sessionStorage) {
+
+    $scope.things = StorageService.getAll();
+    $scope.add = function (newThing) {
+      StorageService.add(newThing);
+    };
+    $scope.remove = function (thing) {
+      StorageService.remove(thing);
+    };
 
 })
 
@@ -13,7 +21,7 @@ angular.module('starter.controllers', ['firebase'])
 
       // FirebaseUI config.
       var uiConfig = {
-        'signInSuccessUrl': '#/app/home',
+        'signInSuccessUrl': '#/app/main',
         'signInOptions': [
           firebase.auth.GoogleAuthProvider.PROVIDER_ID,
           firebase.auth.FacebookAuthProvider.PROVIDER_ID,
@@ -111,6 +119,10 @@ angular.module('starter.controllers', ['firebase'])
     itemRef.child('status').set('purchased');
     $ionicListDelegate.closeOptionButtons();
   };
+})
+.controller('MainCtrl', function($scope, Matches) {
+  $scope.matchesObj = Matches;
+  console.log($scope.matchesObj)
 })
 .controller('BrowseCtrl', function($scope, $rootScope) {
     console.log("Browse page");
