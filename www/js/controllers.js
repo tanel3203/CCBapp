@@ -20,8 +20,9 @@ angular.module('starter.controllers', ['firebase'])
         ],
         'callbacks': {
           'signInSuccess': function(currentUser, credential, redirectUrl) {
-              console.log(currentUser.displayName);
-              $rootScope.user = currentUser.displayName;
+              console.log(credential);
+              $rootScope.user = currentUser;
+              $rootScope.accessToken = credential;
             return true;
           }
         }
