@@ -36,14 +36,15 @@ angular.module('starter.controllers', ['firebase', 'ngStorage'])
 
         } else {
           console.log("User logged out");
-
+ 
           // FirebaseUI config.
           var uiConfig = {
             'signInSuccessUrl': '#/app/main',
             'signInOptions': [
               firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-              firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+              firebase.auth.FacebookAuthProvider.PROVIDER_ID
             ],
+            siteName: "projekt1-eafbc",
             'callbacks': {
               'signInSuccess': function(currentUser, credential, redirectUrl) {
                   console.log("LOGGING IN");
@@ -53,8 +54,10 @@ angular.module('starter.controllers', ['firebase', 'ngStorage'])
                   $rootScope.userId = currentUser.uid;
                   $rootScope.userEmail = currentUser.email;
                   $rootScope.userPhoto = currentUser.photoURL;
+                 $rootScope.provider = credential.provider;
                   $rootScope.accessToken = credential;
 
+                  console.log("PROVIDER: " + $rootScope.provider);
                   console.log("users " + $rootScope.users);
 
                   function userExistsInUsers(user) {
@@ -66,7 +69,8 @@ angular.module('starter.controllers', ['firebase', 'ngStorage'])
                       'user': $rootScope.user,
                       'userId':$rootScope.userId,
                       'userEmail':$rootScope.userEmail,
-                      'userPhoto':$rootScope.userPhoto
+                      'userPhoto':$rootScope.userPhoto,
+                      'userProvider':$rootScope.provider
                     });   
                     console.log("New user added to the database!");                   
                   } else {
