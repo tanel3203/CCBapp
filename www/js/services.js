@@ -20,7 +20,7 @@ angular.module('starter.services', ['firebase', 'ngStorage'])
 	  	{
 	  		name: "Jane Smith",
 	  		image: "imageURL"
-	  	}
+	  	} 
 	  ];
 
 

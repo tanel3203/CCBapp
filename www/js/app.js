@@ -42,6 +42,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngStorage', 'starter.controller
       }
     }
   })
+  .state('app.chat', {
+    url: '/chat',
+    views: {
+      'mainContent': {
+        templateUrl: 'templates/chat.html',
+        controller: 'MessagesCtrl'
+      }
+    }
+  })
   .state('app.browse', {
     url: '/browse',
     views: {
