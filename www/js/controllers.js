@@ -1,6 +1,6 @@
 
 angular.module('starter.controllers', ['firebase', 'ngStorage'])
-.controller('AppCtrl', function($scope, StorageService, $localStorage, $sessionStorage) {
+.controller('AppCtrl', function($scope, $state, StorageService, $localStorage, $sessionStorage) {
 
     $scope.things = StorageService.getAll();
     $scope.add = function (newThing) {
@@ -9,8 +9,6 @@ angular.module('starter.controllers', ['firebase', 'ngStorage'])
     $scope.remove = function (thing) {
       StorageService.remove(thing);
     };
-
-
 
 
 
@@ -33,6 +31,21 @@ angular.module('starter.controllers', ['firebase', 'ngStorage'])
           $rootScope.user = user;
           console.log("User signed in! ");
           console.log(user);
+/* SIGNOUT, not updating after first round of signin and out
+          document.getElementById('firebaseui-auth-container').textContent = "Sign Out";
+         document.getElementById('firebaseui-auth-container').addEventListener("click", function() {
+              firebase.auth().signOut().then(function() {
+                console.log("Sign-out successful.");
+              }, function(error) {
+                console.log("An error happened.");
+              });
+            })
+*/        
+
+
+
+
+
 
         } else {
           console.log("User logged out");
@@ -54,7 +67,7 @@ angular.module('starter.controllers', ['firebase', 'ngStorage'])
                   $rootScope.userId = currentUser.uid;
                   $rootScope.userEmail = currentUser.email;
                   $rootScope.userPhoto = currentUser.photoURL;
-                 $rootScope.provider = credential.provider;
+                  $rootScope.provider = credential.provider;
                   $rootScope.accessToken = credential;
 
                   console.log("PROVIDER: " + $rootScope.provider);
@@ -172,7 +185,8 @@ angular.module('starter.controllers', ['firebase', 'ngStorage'])
 .controller('MainCtrl', function($scope, $rootScope, Matches, Users) {
   $scope.matchesObj = Matches;
   $rootScope.users = Users;
-  console.log($scope.matchesObj)
+  console.log("Users: ");
+  console.log($rootScope.users);
 
 
 

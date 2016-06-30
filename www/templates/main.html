@@ -18,12 +18,12 @@
 
   <ion-content>
     <ion-list>
-      <ion-item ng-repeat="match in matchesObj" href="#/app/chat/{{chat.id}}" class="item-thumbnail-left">
-        <img ng-src="{{match.image}}">
-        <h2>{{match.name}}
-         <span style="font-size:75%">{{match.name}}</span>
+      <ion-item ng-repeat="match in users" href="#/app/chat/{{chat.id}}" class="item-thumbnail-left">
+        <img ng-src="{{match.userPhoto}}">
+        <h2>{{match.user}}
+         <span style="font-size:75%">{{match.user}}</span>
         <span class="badge badge-assertive">local</span></h2>
-        <p>{{match.name}}</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
         <ion-option-button class="button-assertive icon ion-plus-circled"
             ng-click="">
         </ion-option-button>
