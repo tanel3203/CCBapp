@@ -42,11 +42,6 @@ angular.module('starter.controllers', ['firebase', 'ngStorage'])
             })
 */        
 
-
-
-
-
-
         } else {
           console.log("User logged out");
  
@@ -182,11 +177,14 @@ angular.module('starter.controllers', ['firebase', 'ngStorage'])
     $ionicListDelegate.closeOptionButtons();
   };
 })
-.controller('MainCtrl', function($scope, $rootScope, Matches, Users) {
+.controller('MainCtrl', function($scope, $location, $rootScope, Matches, Users) {
   $scope.matchesObj = Matches;
   $rootScope.users = Users;
   console.log("Users: ");
   console.log($rootScope.users);
+  console.log($location);
+
+
 
 
 
@@ -196,9 +194,49 @@ angular.module('starter.controllers', ['firebase', 'ngStorage'])
     console.log("USER: " + $rootScope.user);
 
 })
-.controller('MessagesCtrl', function($scope, $timeout, $ionicScrollDelegate) {
+.controller('MessagesCtrl', function($scope, $rootScope, $stateParams, $timeout, $ionicScrollDelegate, Dialogues) {
 
-  $scope.showTime = true;
+  $scope.partnerId = $stateParams.dialoguePartnerUserId;
+  $scope.activeUserId = $rootScope.user.uid;
+  console.log("Partner's ID: " + $scope.partnerId + ", my ID: " + $scope.activeUserId);
+
+  // ----------------------------------------
+  
+      
+  $scope.dialogues = Dialogues; 
+  console.log("EXisting dialogues");
+  console.log($scope.dialogues);
+  console.log("----------------------------------");
+  function findDialogue(dialogue) {
+    console.log("Begin findDialogue");
+    console.log(dialogue);
+    console.log("Dialogue user1: " + dialogue.user1 + ", scope partnerId: " + $scope.partnerId);
+    console.log("Dialogue user2: " + dialogue.user2 + ", scope myId: " + $scope.activeUserId);
+    return (((dialogue.user1 === $scope.partnerId) && (dialogue.user2 === $scope.activeUserId) ) || ((dialogue.user2 === $scope.partnerId) && (dialogue.user1 === $scope.activeUserId)));
+  };
+
+  $scope.dialogues.$loaded()
+    .then(function() {
+
+          var dialogueExists = $scope.dialogues.find(findDialogue);
+          console.log("dialogueExists " + dialogueExists);
+          console.log(dialogueExists);
+          console.log("..................");
+          if (!dialogueExists) {
+            $scope.dialogues.$add({
+              'user1': $scope.partnerId,
+              'user2': $scope.activeUserId
+            });
+            console.log("New dialogue added!");
+          } else {
+            console.log("Dialogue already exists");
+          }
+    }).catch(function(error) {
+      console.log(error);
+    });
+
+  // -------------------------------- 
+  $scope.showTime = true; 
 
   var alternate,
     isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();

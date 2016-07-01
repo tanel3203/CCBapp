@@ -1,6 +1,13 @@
 
 angular.module('starter.services', ['firebase', 'ngStorage'])
 
+	.factory('Dialogues', ['$firebaseArray', function($firebaseArray) {
+	  var dialoguesRef = new Firebase('https://projekt1-eafbc.firebaseio.com/dialogues');
+	  
+	  return $firebaseArray(dialoguesRef);
+    
+	}])
+
 	.factory('Users', ['$firebaseArray', function($firebaseArray) {
 	  var usersRef = new Firebase('https://projekt1-eafbc.firebaseio.com/users');
 	  return $firebaseArray(usersRef);

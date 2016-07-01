@@ -5,23 +5,23 @@
    <div class="tabs-striped tabs-color-royal">
     <ul class="tabs">
         <li ng-class="{active:isSelected(1)}" class="tab-item">
-            <a ng-click="select(1)">The Menu</a></li>
+            <a ng-click="select(1)">ACTIVE</a></li>
         <li ng-class="{active:isSelected(2)}" class="tab-item">
-            <a ng-click="select(2)">Appetizers</a></li>
+            <a ng-click="select(2)">LOCAL</a></li>
         <li ng-class="{active:isSelected(3)}" class="tab-item">
-            <a ng-click="select(3)">Mains</a></li>
+            <a ng-click="select(3)">MATCHED</a></li>
         <li ng-class="{active:isSelected(4)}" class="tab-item">
-            <a  ng-click="select(4)">Desserts</a></li>
+            <a  ng-click="select(4)">ALL</a></li>
     </ul>
   </div>
 -->
 
   <ion-content>
     <ion-list>
-      <ion-item ng-repeat="match in users" href="#/app/chat" class="item-thumbnail-left">
+      <ion-item ng-repeat="match in users" href="#/app/chat/{{match.userId}}" class="item-thumbnail-left">
         <img ng-src="{{match.userPhoto}}">
         <h2>{{match.user}}
-         <span style="font-size:75%">{{match.user}}</span>
+         <span style="font-size:75%">{{match.userId}}</span>
         <span class="badge badge-assertive">local</span></h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
         <ion-option-button class="button-assertive icon ion-plus-circled"

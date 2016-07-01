@@ -33,7 +33,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngStorage', 'starter.controller
     }
   })
 
-  .state('app.main', {
+  .state('app.main', { 
     url: '/main',
     views: {
       'mainContent': {
@@ -48,6 +48,20 @@ angular.module('starter', ['ionic', 'firebase', 'ngStorage', 'starter.controller
       'mainContent': {
         templateUrl: 'templates/chat.html',
         controller: 'MessagesCtrl'
+      }
+    }
+  })
+  .state('app.chatDialogue', {
+    url: '/chat/:dialoguePartnerUserId',
+    views: {
+      'mainContent': {
+        templateUrl: 'templates/chat.html',
+        controller: 'MessagesCtrl' /*,
+        resolve: {
+          dialogues: ['Dialogues', function(Dialogues){
+            return Dialogues.query();
+          }]
+        }*/
       }
     }
   })
