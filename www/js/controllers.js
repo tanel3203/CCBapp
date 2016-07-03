@@ -193,11 +193,13 @@ angular.module('starter.controllers', ['firebase', 'ngStorage'])
     console.log("Browse page");
     console.log("USER: " + $rootScope.user);
 
+
 })
 .controller('MessagesCtrl', function($scope, $rootScope, $stateParams, $timeout, $ionicScrollDelegate, Dialogues, Chats) {
 
   $scope.partnerId = $stateParams.dialoguePartnerUserId;
   $scope.activeUserId = $rootScope.user.uid;
+
   console.log("Partner's ID: " + $scope.partnerId + ", my ID: " + $scope.activeUserId);
 
   // ----------------------------------------
@@ -240,27 +242,34 @@ angular.module('starter.controllers', ['firebase', 'ngStorage'])
       console.log($scope.dialogueId);
       console.log("ABOVE ABOVE ABOVE");
 
-console.log("chats CHATS chats");
-$scope.messages = angular.fromJson($scope.dialogues.find(findDialogue).messages);
-console.log("chats chats chats chats");
+    }).then(function() {
 
+console.log("chats CHATS chats");
+$scope.messages = Chats.getChatFromChats($scope.dialogueId);
+
+console.log("chats chats chats chats");
 
     }).then(function() {
 
 
+console.log("chats CHATS chats");
+console.log($scope.messages);
+
+console.log("chats chats chats chats");
+
                     $scope.showTime = true; 
 
-                    var alternate,
+                    var /*alternate,*/
                       isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
 
                     $scope.sendMessage = function() {
-                      alternate = !alternate;
+                      //alternate = !alternate;
 
                       var d = new Date();
                     d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
 
 
-                      $scope.messages2.push({
+                      $scope.messages.push({
                         userId: $scope.activeUserId,
                         text: $scope.data.message,
                         time: d
@@ -268,18 +277,14 @@ console.log("chats chats chats chats");
 
 
 
-Chats.updateChatInChats($scope.dialogueId, $scope.messages2);
+Chats.updateChatInChats($scope.dialogueId, $scope.messages);
 
-$scope.messages = angular.fromJson($scope.dialogues.find(findDialogue).messages);
+//$scope.messages = $scope.dialogues.find(findDialogue).messages;
 console.log("DOWN");
 console.log($scope.messages);
 console.log("UP");
 /*
-console.log("del del DEL DEL");
-                      console.log($scope.messages);
-                      console.log($scope.dialogueId);
 
-console.log("del deldel deldel deldel deldel del");
   var msgs = angular.toJson($scope.messages);
   firebase.database().ref('dialogues/' + $scope.dialogueId).update({
     messages: msgs
