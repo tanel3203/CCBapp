@@ -5,7 +5,7 @@
         <ion-content class="content-stable"
                      on-tap="showTime = !showTime">
 
-          <div ng-repeat="message in messages"
+          <div ng-repeat="message in messages track by $index"
                ng-class="{other: message.userId != myId}" 
                class="messages">
 

@@ -194,7 +194,7 @@ angular.module('starter.controllers', ['firebase', 'ngStorage'])
     console.log("USER: " + $rootScope.user);
 
 })
-.controller('MessagesCtrl', function($scope, $rootScope, $stateParams, $timeout, $ionicScrollDelegate, Dialogues) {
+.controller('MessagesCtrl', function($scope, $rootScope, $stateParams, $timeout, $ionicScrollDelegate, Dialogues, Chats) {
 
   $scope.partnerId = $stateParams.dialoguePartnerUserId;
   $scope.activeUserId = $rootScope.user.uid;
@@ -226,60 +226,104 @@ angular.module('starter.controllers', ['firebase', 'ngStorage'])
             $scope.dialogues.$add({
               'user1': $scope.partnerId,
               'user2': $scope.activeUserId
+
             });
             console.log("New dialogue added!");
           } else {
             console.log("Dialogue already exists");
+            console.log(dialogueExists.$id);
           }
+    }).then(function() {
+        $scope.dialogueId = $scope.dialogues.find(findDialogue).$id;
+
+      console.log("BELOW BELOW BELOW");
+      console.log($scope.dialogueId);
+      console.log("ABOVE ABOVE ABOVE");
+
+console.log("chats CHATS chats");
+$scope.messages = angular.fromJson($scope.dialogues.find(findDialogue).messages);
+console.log("chats chats chats chats");
+
+
+    }).then(function() {
+
+
+                    $scope.showTime = true; 
+
+                    var alternate,
+                      isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
+
+                    $scope.sendMessage = function() {
+                      alternate = !alternate;
+
+                      var d = new Date();
+                    d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
+
+
+                      $scope.messages2.push({
+                        userId: $scope.activeUserId,
+                        text: $scope.data.message,
+                        time: d
+                      });
+
+
+
+Chats.updateChatInChats($scope.dialogueId, $scope.messages2);
+
+$scope.messages = angular.fromJson($scope.dialogues.find(findDialogue).messages);
+console.log("DOWN");
+console.log($scope.messages);
+console.log("UP");
+/*
+console.log("del del DEL DEL");
+                      console.log($scope.messages);
+                      console.log($scope.dialogueId);
+
+console.log("del deldel deldel deldel deldel del");
+  var msgs = angular.toJson($scope.messages);
+  firebase.database().ref('dialogues/' + $scope.dialogueId).update({
+    messages: msgs
+  });
+*/
+
+
+
+                      delete $scope.data.message;
+                      $ionicScrollDelegate.scrollBottom(true);
+
+                    };
+
+
+                    $scope.inputUp = function() {
+                      if (isIOS) $scope.data.keyboardHeight = 216;
+                      $timeout(function() {
+                        $ionicScrollDelegate.scrollBottom(true);
+                      }, 300);
+
+                    };
+
+                    $scope.inputDown = function() {
+                      if (isIOS) $scope.data.keyboardHeight = 0;
+                      $ionicScrollDelegate.resize();
+                    };
+
+                    $scope.closeKeyboard = function() {
+                      // cordova.plugins.Keyboard.close();
+                    };
+
+
+                    $scope.data = {};
+                    $scope.myId = $scope.activeUserId;
+                    // add a clause to open existing messages if dialogue exists
+                    $scope.messages2 = [];
+
+
     }).catch(function(error) {
       console.log(error);
     });
 
   // -------------------------------- 
-  $scope.showTime = true; 
 
-  var alternate,
-    isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
-
-  $scope.sendMessage = function() {
-    alternate = !alternate;
-
-    var d = new Date();
-  d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
-
-    $scope.messages.push({
-      userId: alternate ? '12345' : '54321',
-      text: $scope.data.message,
-      time: d
-    });
-
-    delete $scope.data.message;
-    $ionicScrollDelegate.scrollBottom(true);
-
-  };
-
-
-  $scope.inputUp = function() {
-    if (isIOS) $scope.data.keyboardHeight = 216;
-    $timeout(function() {
-      $ionicScrollDelegate.scrollBottom(true);
-    }, 300);
-
-  };
-
-  $scope.inputDown = function() {
-    if (isIOS) $scope.data.keyboardHeight = 0;
-    $ionicScrollDelegate.resize();
-  };
-
-  $scope.closeKeyboard = function() {
-    // cordova.plugins.Keyboard.close();
-  };
-
-
-  $scope.data = {};
-  $scope.myId = '12345';
-  $scope.messages = [];
 
 })
 .directive('input', function($timeout) {
