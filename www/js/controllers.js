@@ -1,5 +1,5 @@
 
-angular.module('starter.controllers', ['firebase', 'ngStorage'])
+angular.module('starter.controllers', ['firebase', 'ngStorage', 'nvd3'])
 .controller('AppCtrl', function($scope, $state, StorageService, $localStorage, $sessionStorage) {
 
     $scope.things = StorageService.getAll();
@@ -12,6 +12,17 @@ angular.module('starter.controllers', ['firebase', 'ngStorage'])
 
 
 
+
+})
+
+.controller('GraphsCtrl', function($scope, $rootScope, PieChart) {
+  $scope.vm = this;
+  $scope.vm = {};
+
+  $scope.vm.options = PieChart.options();
+  $scope.vm.data = PieChart.data();
+
+  console.log($scope.vm.data);
 
 })
 
@@ -96,12 +107,7 @@ angular.module('starter.controllers', ['firebase', 'ngStorage'])
         }
       });
 
-
-
-
     console.log("Work finished");
-
-
 })
 .controller('LoginUserCtrl', function($scope, $rootScope, $ionicModal) {
 
