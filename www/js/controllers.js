@@ -19,13 +19,37 @@ angular.module('starter.controllers', ['firebase', 'ngStorage', 'nvd3'])
   $scope.vm = this;
   $scope.vm = {};
 
-  $scope.vm.options = PieChart.options();
   $scope.vm.data = PieChart.data();
-
+  $scope.vm.options = PieChart.options();
+  
+  console.log("...........");
   console.log($scope.vm.data);
+  console.log("--------------");
+ 
+})
+.controller('ChartsCtrl', function($scope, $rootScope, PieChart) {
+
+    var svg = dimple.newSvg("#divD", 350, 350);
+    var data = [
+      { "Month":"Jan-11", "Channel":"Hypermarket", "Unit Sales":2000 },
+      { "Month":"Feb-11", "Channel":"Hypermarket",  "Unit Sales":3000 }
+    ];
+    var dataset = PieChart.dataset();
+    var myChart = new dimple.chart(svg, dataset);
+      myChart.setBounds(60, 30, 200, 200);
+      var x = myChart.addCategoryAxis("x", "x");
+      x.addOrderRule("z");
+      var y1 = myChart.addMeasureAxis("y", "y");
+      y1.overrideMin = 90;
+      var y2 = myChart.addMeasureAxis("y", "b");
+     myChart.addSeries("Sales", dimple.plot.bar, [x, y2]);
+
+      myChart.addSeries("a", dimple.plot.line);
+      myChart.addLegend(60, 10, 195, 20, "right");
+      myChart.draw();
+    console.log("HELLO");
 
 })
-
 .controller('LoginSocialCtrl', function($scope, $rootScope, Users) {
 
 

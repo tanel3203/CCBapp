@@ -7,7 +7,9 @@ angular.module('starter', ['ionic',
                             'ngStorage', 
                             'starter.controllers', 
                             'starter.services',
-                            'nvd3'])
+                            'starter.directives',
+                            'nvd3'
+                            ])
 
   .config(function($stateProvider,$urlRouterProvider) {
     $stateProvider
@@ -53,6 +55,15 @@ angular.module('starter', ['ionic',
       'mainContent': {
         templateUrl: 'templates/graphs.html',
         controller: 'GraphsCtrl'
+      }
+    }
+  })
+  .state('app.charts', { 
+    url: '/charts',
+    views: {
+      'mainContent': {
+        templateUrl: 'templates/charts.html',
+        controller: 'ChartsCtrl'
       }
     }
   })
