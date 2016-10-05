@@ -27,27 +27,79 @@ angular.module('starter.controllers', ['firebase', 'ngStorage', 'nvd3'])
   console.log("--------------");
  
 })
-.controller('ChartsCtrl', function($scope, $rootScope, PieChart) {
+.controller('ChartsCtrl', function($scope, $rootScope, PieChart, UserData) {
 
-    var svg = dimple.newSvg("#divD", 350, 350);
-    var data = [
+  // Data import from UserData service from Firebase DB
+  $scope.userData = UserData;
+  console.log($scope.userData);
+
+
+/*  var data = [
       { "Month":"Jan-11", "Channel":"Hypermarket", "Unit Sales":2000 },
       { "Month":"Feb-11", "Channel":"Hypermarket",  "Unit Sales":3000 }
-    ];
-    var dataset = PieChart.dataset();
+    ];*/
+
+
+  $scope.userData.$loaded().then(function() {
+
+
+    var svg = dimple.newSvg("#divD", 350, 350);
+  
+    var dataset =  $scope.userData /*PieChart.dataset()*/;
     var myChart = new dimple.chart(svg, dataset);
       myChart.setBounds(60, 30, 200, 200);
-      var x = myChart.addCategoryAxis("x", "x");
-      x.addOrderRule("z");
-      var y1 = myChart.addMeasureAxis("y", "y");
+      var x = myChart.addCategoryAxis("x", "date");
+      //x.addOrderRule("z");
+      var y1 = myChart.addMeasureAxis("y", "weight");
       y1.overrideMin = 90;
-      var y2 = myChart.addMeasureAxis("y", "b");
-     myChart.addSeries("Sales", dimple.plot.bar, [x, y2]);
+      var y2 = myChart.addMeasureAxis("y", "calories");
+     myChart.addSeries("calories", dimple.plot.bar, [x, y2]);
 
-      myChart.addSeries("a", dimple.plot.line);
+      myChart.addSeries("weight", dimple.plot.line);
       myChart.addLegend(60, 10, 195, 20, "right");
       myChart.draw();
     console.log("HELLO");
+
+
+    })
+
+
+
+
+})
+.controller('ProgressCtrl', function($scope, $rootScope, UserData) {
+  // Data item for todays calories, exercise, weight
+  $scope.todayData = {};
+
+  // Data item from UserData service from Firebase DB
+  $scope.userData = UserData;
+
+  $scope.addTodayData = function() {
+    var date = new Date();
+    //var modifiedDate = date.getDate() +"-"+date.getMonth()+"-"+date.getFullYear();
+    var modifiedDate = '5-9-2016';
+
+    $scope.todayData.uid = $rootScope.user.uid;
+    $scope.todayData.date = modifiedDate;
+    console.log($scope.todayData)
+    console.log(modifiedDate);
+
+    if ($rootScope.user) {
+      var today = $scope.todayData;
+    } else {
+      console.log("You are not logged in!");
+    }
+    
+    if (today) {
+      $scope.userData.$add(today);
+    }
+
+  };
+
+
+
+
+
 
 })
 .controller('LoginSocialCtrl', function($scope, $rootScope, Users) {
@@ -295,36 +347,21 @@ console.log("chats chats chats chats");
                     $scope.sendMessage = function() {
                       //alternate = !alternate;
 
-                      var d = new Date();
-                    d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
+                          var d = new Date();
+                          d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
 
 
-                      $scope.messages.push({
-                        userId: $scope.activeUserId,
-                        text: $scope.data.message,
-                        time: d
-                      });
+                          $scope.messages.push({
+                            userId: $scope.activeUserId,
+                            text: $scope.data.message,
+                            time: d
+                          });
+
+                          Chats.updateChatInChats($scope.dialogueId, $scope.messages);
 
 
-
-Chats.updateChatInChats($scope.dialogueId, $scope.messages);
-
-//$scope.messages = $scope.dialogues.find(findDialogue).messages;
-console.log("DOWN");
-console.log($scope.messages);
-console.log("UP");
-/*
-
-  var msgs = angular.toJson($scope.messages);
-  firebase.database().ref('dialogues/' + $scope.dialogueId).update({
-    messages: msgs
-  });
-*/
-
-
-
-                      delete $scope.data.message;
-                      $ionicScrollDelegate.scrollBottom(true);
+                          delete $scope.data.message;
+                          $ionicScrollDelegate.scrollBottom(true);
 
                     };
 
@@ -349,6 +386,7 @@ console.log("UP");
 
                     $scope.data = {};
                     $scope.myId = $scope.activeUserId;
+
                     // add a clause to open existing messages if dialogue exists
                     $scope.messages2 = [];
 
@@ -357,10 +395,8 @@ console.log("UP");
       console.log(error);
     });
 
-  // -------------------------------- 
 
-
-})
+})/*
 .directive('input', function($timeout) {
   return {
     restrict: 'E',
@@ -397,4 +433,4 @@ console.log("UP");
       });
     }
   }
-})
+})*/

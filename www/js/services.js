@@ -261,7 +261,10 @@ console.log("--------- FACTORY");
 	  var itemsRef = new Firebase('https://projekt1-eafbc.firebaseio.com/items');
 	  return $firebaseArray(itemsRef);
 	}])
-
+	.factory('UserData', ['$firebaseArray', function($firebaseArray) {
+	  var userDataRef = new Firebase('https://projekt1-eafbc.firebaseio.com/userData');
+	  return $firebaseArray(userDataRef);
+	}])
 	.factory('BrowseTemp', ['$firebaseArray', function($firebaseArray) {
 
    		var ref = firebase.database().ref("dialogues/" + chatId + "/messages");

@@ -1,0 +1,24 @@
+
+<ion-view view-title="Progress">
+
+    <ion-content>
+    	<p>Progress page </p>
+    	<form ng-submit=addTodayData()>
+			<div class="list list-inset">
+			  <label class="item item-input">
+			    <input type="text" placeholder="Calories ingested today" ng-model="todayData.calories">
+			  </label>
+			  <label class="item item-input">
+			    <input type="text" placeholder="Exercise done today" ng-model="todayData.exercise">
+			  </label>
+			  <label class="item item-input">
+			    <input type="text" placeholder="Weight today" ng-model="todayData.weight">
+			  </label>
+			  <button class="button button-block button-balanced" type="submit" >
+	  				GO
+				</button>
+			</div>
+		</form>
+
+    </ion-content>
+</ion-view>

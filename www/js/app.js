@@ -67,6 +67,15 @@ angular.module('starter', ['ionic',
       }
     }
   })
+  .state('app.progress', { 
+    url: '/progress',
+    views: {
+      'mainContent': {
+        templateUrl: 'templates/progress.html',
+        controller: 'ProgressCtrl'
+      }
+    }
+  })
   .state('app.chat', {
     url: '/chat',
     views: {
