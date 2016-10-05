@@ -265,6 +265,31 @@ console.log("--------- FACTORY");
 	  var userDataRef = new Firebase('https://projekt1-eafbc.firebaseio.com/userData');
 	  return $firebaseArray(userDataRef);
 	}])
+
+	// Logic factory for filling Targets table
+	.factory('TargetsData', ['$firebaseArray', function($firebaseArray) {
+	  var userDataRef = new Firebase('https://projekt1-eafbc.firebaseio.com/userData');
+	  var refArray = $firebaseArray(userDataRef);
+	  console.log(refArray);
+
+	  function sumAll(array, indexRef) {
+	  	var total = 0;
+	  	for (var val in array) {
+	  		if (val.startsWith('$')) {
+	  		} else {
+	  			total += parseInt(array[val][indexRef]);
+	  		}
+	  	}
+	  	return total;
+	  }
+
+	  refArray.$loaded().then(function() {
+	  	var cumulativeCalorieBalance = sumAll(refArray,"calories");
+	  })
+	  
+
+	  return refArray;
+	}])
 	.factory('BrowseTemp', ['$firebaseArray', function($firebaseArray) {
 
    		var ref = firebase.database().ref("dialogues/" + chatId + "/messages");

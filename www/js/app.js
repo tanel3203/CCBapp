@@ -76,6 +76,15 @@ angular.module('starter', ['ionic',
       }
     }
   })
+  .state('app.targets', { 
+    url: '/targets',
+    views: {
+      'mainContent': {
+        templateUrl: 'templates/targets.html',
+        controller: 'TargetsCtrl'
+      }
+    }
+  })
   .state('app.chat', {
     url: '/chat',
     views: {

@@ -76,8 +76,8 @@ angular.module('starter.controllers', ['firebase', 'ngStorage', 'nvd3'])
 
   $scope.addTodayData = function() {
     var date = new Date();
-    //var modifiedDate = date.getDate() +"-"+date.getMonth()+"-"+date.getFullYear();
-    var modifiedDate = '5-9-2016';
+    var modifiedDate = date.getDate() +"-"+date.getMonth()+"-"+date.getFullYear();
+    //var modifiedDate = '5-9-2016';
 
     $scope.todayData.uid = $rootScope.user.uid;
     $scope.todayData.date = modifiedDate;
@@ -96,10 +96,18 @@ angular.module('starter.controllers', ['firebase', 'ngStorage', 'nvd3'])
 
   };
 
+})
+.controller('TargetsCtrl', function($scope, $rootScope, TargetsData) {
+
+  $scope.realTargets = TargetsData;
+  console.log($scope.realTargets);
 
 
-
-
+  $scope.targetData = [
+    {'Weight': 95.4, 'Target': 50000, 'Weekly loss': -5400, 'CCB': -119, 'Weeks': 0.022037037037037, 'Target date': 42627.8457407407},
+    {'Weight': 94.9, 'Target': 40000, 'Weekly loss': -5400, 'CCB': 9881, 'Weeks': -1.82981481481481, 'Target date': 42640.8087037037},
+    {'Weight': 94.4, 'Target': 30000, 'Weekly loss': -5400, 'CCB': 19881, 'Weeks': -3.68166666666667, 'Target date': 42653.7716666667}
+  ];
 
 })
 .controller('LoginSocialCtrl', function($scope, $rootScope, Users) {
