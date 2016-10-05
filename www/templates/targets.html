@@ -1,0 +1,18 @@
+
+<ion-view view-title="Targets">
+
+    <ion-content>
+
+    <ion-list>
+      <ion-item ng-repeat="match in targetData"  class="item-thumbnail-left">
+      	<div class="row">
+     		<div class="col">{{match.Weight}}</div>
+     		<div class="col">{{match.Target}}</div>
+     		<div class="col">{{match.CCB}}</div>
+     	</div>
+      </ion-item>
+    </ion-list>
+
+
+    </ion-content>
+</ion-view>
