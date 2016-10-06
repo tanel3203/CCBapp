@@ -15,59 +15,48 @@ angular.module('starter.controllers', ['firebase', 'ngStorage', 'nvd3'])
 
 })
 
-.controller('GraphsCtrl', function($scope, $rootScope, PieChart) {
-  $scope.vm = this;
-  $scope.vm = {};
+.controller('GraphsCtrl', function($scope, $rootScope) {
 
-  $scope.vm.data = PieChart.data();
-  $scope.vm.options = PieChart.options();
-  
-  console.log("...........");
-  console.log($scope.vm.data);
-  console.log("--------------");
  
 })
-.controller('ChartsCtrl', function($scope, $rootScope, PieChart, UserData) {
+.controller('ChartsCtrl', function($scope, $rootScope, UserData) {
 
   // Data import from UserData service from Firebase DB
   $scope.userData = UserData;
   console.log($scope.userData);
 
 
-/*  var data = [
-      { "Month":"Jan-11", "Channel":"Hypermarket", "Unit Sales":2000 },
-      { "Month":"Feb-11", "Channel":"Hypermarket",  "Unit Sales":3000 }
-    ];*/
+    $scope.userData.$loaded().then(function() {
+      console.log($scope.userData);
+      console.log($rootScope.user.uid);
+      console.log("length " + $scope.userData.length);
+        for (var i = 0; i < $scope.userData.length; i++) {
+          console.log("Current user: " + $rootScope.user.uid + ", reference uid: " + $scope.userData[i].uid);
+          if ($rootScope.user.uid !== $scope.userData[i].uid) {
+            $scope.userData.splice(i,1);
+            console.log("Spliced: " + $scope.userData[i].uid);
+          }
+        };
+        console.log($scope.userData);
 
-
-  $scope.userData.$loaded().then(function() {
-
+    }).then(function() {
 
     var svg = dimple.newSvg("#divD", 350, 350);
-  
-    var dataset =  $scope.userData /*PieChart.dataset()*/;
+    var dataset =  $scope.userData;
     var myChart = new dimple.chart(svg, dataset);
-      myChart.setBounds(60, 30, 200, 200);
-      var x = myChart.addCategoryAxis("x", "date");
-      //x.addOrderRule("z");
-      var y1 = myChart.addMeasureAxis("y", "weight");
-      y1.overrideMin = 90;
-      var y2 = myChart.addMeasureAxis("y", "calories");
-     myChart.addSeries("calories", dimple.plot.bar, [x, y2]);
-
-      myChart.addSeries("weight", dimple.plot.line);
-      myChart.addLegend(60, 10, 195, 20, "right");
-      myChart.draw();
-    console.log("HELLO");
-
-
-    })
-
-
-
+    myChart.setMargins("15%", "10%", "15%", "10%");
+    var dateAxis = myChart.addCategoryAxis("x", "date");
+    var weightAxis = myChart.addMeasureAxis("y", "weight");
+    var caloriesAxis = myChart.addMeasureAxis("y", "calories");
+    myChart.addSeries("wght", dimple.plot.line, [dateAxis, weightAxis]);
+    myChart.addSeries("cals", dimple.plot.line, [dateAxis, caloriesAxis]);
+    myChart.addLegend("50%","5%","50%","20%","right")
+    myChart.draw();
+  })
 
 })
 .controller('ProgressCtrl', function($scope, $rootScope, UserData) {
+
   // Data item for todays calories, exercise, weight
   $scope.todayData = {};
 
@@ -76,7 +65,6 @@ angular.module('starter.controllers', ['firebase', 'ngStorage', 'nvd3'])
 
   $scope.addTodayData = function() {
     var date = new Date();
-    //var modifiedDate = date.getDate() +"-"+date.getMonth()+"-"+date.getFullYear();
     var modifiedDate = '7-10-2016';
 
     $scope.todayData.uid = $rootScope.user.uid;
