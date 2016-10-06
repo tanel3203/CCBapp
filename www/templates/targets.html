@@ -3,12 +3,24 @@
 
     <ion-content>
 
+    <ion-item ng-model="targetsData[0].weeklyLoss">
+   	 <p><small> Assuming a weekly loss of {{targetsData[0].weeklyLoss}} kcal</small></p>
+    </ion-item>
     <ion-list>
-      <ion-item ng-repeat="match in targetData"  class="item-thumbnail-left">
+         	<div class="row">
+     		<div class="col col-15"><small>Weight</small></div>
+     		<div class="col col-25"><small>Target</small></div>
+     		<div class="col col-15"><small>CCB</small></div>
+     		<div class="col col-15"><small>Weeks</small></div>
+     		<div class="col col-25"><small>TargetDates</small></div>
+     	</div> 
+      <ion-item ng-repeat="match in targetsData">
       	<div class="row">
-     		<div class="col">{{match.Weight}}</div>
-     		<div class="col">{{match.Target}}</div>
-     		<div class="col">{{match.CCB}}</div>
+     		<div class="col col-15"><small>{{match.Weight}}</small></div>
+     		<div class="col col-25"><small>{{match.Target}}</small></div>
+     		<div class="col col-15"><small>{{match.CCB}}</small></div>
+     		<div class="col col-15"><small>{{match.Weeks}}</small></div>
+     		<div class="col col-25"><small>{{match.TargetDates}}</small></div>
      	</div>
       </ion-item>
     </ion-list>

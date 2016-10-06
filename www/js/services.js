@@ -270,25 +270,131 @@ console.log("--------- FACTORY");
 	.factory('TargetsData', ['$firebaseArray', function($firebaseArray) {
 	  var userDataRef = new Firebase('https://projekt1-eafbc.firebaseio.com/userData');
 	  var refArray = $firebaseArray(userDataRef);
-	  console.log(refArray);
+	  var targetsFac = {};
+	  var targetsData = [];
+	targetsFac.returnTargetsData = function () {
 
-	  function sumAll(array, indexRef) {
-	  	var total = 0;
-	  	for (var val in array) {
-	  		if (val.startsWith('$')) {
-	  		} else {
-	  			total += parseInt(array[val][indexRef]);
-	  		}
-	  	}
-	  	return total;
-	  }
 
-	  refArray.$loaded().then(function() {
-	  	var cumulativeCalorieBalance = sumAll(refArray,"calories");
-	  })
-	  
+		  // Sum all nth values in an array of objects
+		  function sumAll(array, indexRef) {
+		  	var total = 0;
+		  	for (var val in array) {
+		  		if (val.startsWith('$')) {
+		  		} else {
+		  			total += parseInt(array[val][indexRef]);
+		  		}
+		  	}
+		  	return total;
+		  }
 
-	  return refArray;
+		  // Get the nearest 10k value below the current value
+		  function nearestFloor10K(value) {
+		  	var flooredValue = Math.floor(value/10000)*10000;
+		  	return flooredValue;
+		  };
+
+		  // Returns newest Date
+		  function newestDateAndWeight(array) {
+
+		  	for (var i = 1; i < array.length; i++) {
+		  		var currentDate = array[i].date;
+		  		var highestIndex = 0;
+		  		var highestDate = array[highestIndex].date;
+		  		if (new Date(currentDate) > new Date(highestDate)) {
+		  			highestIndex = i;
+		  			highestDate = array[highestIndex].date;
+		  		}
+		  	}
+		  	var dateAndWeight = {'Weight': array[highestIndex].weight, 'date': highestDate}
+		  	return dateAndWeight;
+		  };
+
+		  // Push key-value pairs to array
+		  function pushToArray(array,key1,value1,key2,value2,key3,value3,key4,value4,key5,value5,key6,value6) {
+		  	array.push({
+		  		'Weight': value1,
+		  		'Target': value2,
+		  		'weeklyLoss': value3,
+		  		'CCB': value4,
+		  		'Weeks': value5,
+		  		'TargetDates': value6
+
+		  	})
+		  	return array;
+		  }
+
+		  // OLS model 
+		  function olsModel(intercept, beta1, calories) {
+		  	var weight = intercept+(beta1*calories);
+		  	return weight;
+		  }
+
+		  // Add weeks in mm-dd-yyyy format
+		  function addWeeks(current, weeksToAdd) {
+		  	var currentDate = new Date(current);
+		  	currentDate.setDate(currentDate.getDate()+(7*weeksToAdd));
+		  	var mm = currentDate.getMonth()+1;
+		  	var dd = currentDate.getDate();
+		  	var y = currentDate.getFullYear();
+		  	
+		  	var newDate = (currentDate.getMonth()+1)+"-"+currentDate.getDate()+"-"+currentDate.getFullYear();
+		  	return newDate;
+		  	
+		  }
+
+		  refArray.$loaded().then(function() {
+		  	var cumulativeCalorieBalance = sumAll(refArray,"calories");
+
+		  	// Fill arrays that are entered into the targets data object
+			var target1 = nearestFloor10K(cumulativeCalorieBalance);
+			var dateAndWeight1 = newestDateAndWeight(refArray);
+			var weight1 = dateAndWeight1.Weight;
+			var date1 = dateAndWeight1.date;
+			var weeklyLoss = (250*7);
+		  	var targets = [];
+		  	var ccbs = [];
+		  	var weeks = [];
+		  	var weights = [];
+		  	var targetDates = [];
+			for (var i = 1; i<=3;i++){
+				if (i === 1) {
+					targets.push(target1);
+					ccbs.push(target1-cumulativeCalorieBalance);
+					weeks.push(ccbs[0]/weeklyLoss);
+					weights.push(weight1);
+					targetDates.push(addWeeks(date1,(-weeks[0]))); 
+				} else {
+					var current_target = target1-((i-1)*10000);
+					var current_ccb = current_target-cumulativeCalorieBalance;
+					targets.push(current_target);
+					ccbs.push(current_ccb);
+					weeks.push(current_ccb/weeklyLoss);
+					weights.push(olsModel(93.61322993,0.00007988293642,current_target));
+					targetDates.push(addWeeks(date1,(-weeks[i-1])));
+				}
+			};
+			// arrays are filled.
+		  	
+		  	// Push data to data object
+		  	for (var i = 1; i <= 3; i++) {
+		  		pushToArray(targetsData, 
+		  			'Weight', Math.round(weights[i-1]).toFixed(1), 
+		  			'Target', targets[i-1], 
+		  			'weeklyLoss', weeklyLoss, 
+		  			'CCB', ccbs[i-1], 
+		  			'Weeks',Math.round(weeks[i-1]).toFixed(1),
+		  			'TargetDates', targetDates[i-1])
+		  	}
+		  
+			
+		  });
+
+		  	return targetsData;
+		
+		  
+	};
+
+	  return targetsFac;
 	}])
 	.factory('BrowseTemp', ['$firebaseArray', function($firebaseArray) {
 
