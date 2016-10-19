@@ -23,22 +23,23 @@ angular.module('starter.controllers', ['firebase', 'ngStorage', 'nvd3'])
 
   // Data import from UserData service from Firebase DB
   $scope.userData = UserData;
-  console.log($scope.userData);
-
+  var currUserData = [];
 
     $scope.userData.$loaded().then(function() {
-      console.log($scope.userData);
-      console.log($rootScope.user.uid);
-      console.log("length " + $scope.userData.length);
+
+      console.log("Rootscope user: " + $rootScope.user.uid);
+      console.log("scope user length " + $scope.userData.length);
         for (var i = 0; i < $scope.userData.length; i++) {
           console.log("Current user: " + $rootScope.user.uid + ", reference uid: " + $scope.userData[i].uid);
-          if ($rootScope.user.uid !== $scope.userData[i].uid) {
-            $scope.userData.splice(i,1);
-            console.log("Spliced: " + $scope.userData[i].uid);
+          if ($rootScope.user.uid === $scope.userData[i].uid) {
+            currUserData.push($scope.userData[i])
+           
           }
         };
-        console.log($scope.userData);
-
+        console.log("------------------------");
+        console.log(currUserData);
+        console.log("-------END-----------");
+        $scope.userData = currUserData;
     }).then(function() {
 
     var svg = dimple.newSvg("#divD", 350, 350);
